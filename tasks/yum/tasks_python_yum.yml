@@ -1,6 +1,8 @@
 ---
+  - include: tasks_epel.yml
+
   - name: Python | install python-pip
-    apt: name=python-pip update_cache=yes state=latest
+    yum: name=python-pip update_cache=yes state=latest
     become: yes
     tags:
       -python
@@ -12,7 +14,7 @@
       -python
 
   - name: Python | install python-dev
-    apt: name=python-dev update_cache=yes state=latest
+    yum: name=python-devel update_cache=yes state=latest
     become: yes
     tags:
       -python
@@ -31,12 +33,6 @@
 
   - name: Python | virtualenvwrapper
     shell: pip install -U virtualenvwrapper
-    become: yes
-    tags:
-      -python
-
-  - name: Python | virtualenvwrapper console support
-    apt: pkg="virtualenvwrapper" state="latest"
     become: yes
     tags:
       -python
