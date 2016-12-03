@@ -1,9 +1,9 @@
 
 FROM centos:6
-rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+RUN rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
 
 # Install Ansible
-yum install ansible
+RUN yum install ansible
 RUN mkdir -p /etc/ansible
 
 # Install Ansible inventory file
