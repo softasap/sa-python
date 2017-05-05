@@ -8,16 +8,15 @@
   ignore_errors: true
 
 - name: Install EPEL repo.
-  yum: name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"  state=present
+  yum: name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_release_version | default('7-9') }}.noarch.rpm"  state=present
   retries: 5
   delay: 10
   when: repo_repo_exists | failed
   become: yes
   register: result
   until: '"failed" not in result'
-  
 
 - name: Import EPEL GPG key.
-  rpm_key: key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}" state="present"
+  rpm_key: key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_release_version | default('7-9') }}" state="present"
   when: repo_repo_exists | failed
   become: yes
