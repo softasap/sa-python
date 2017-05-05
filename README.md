@@ -32,4 +32,4 @@ Code licensed under the [BSD 3 clause] (https://opensource.org/licenses/BSD-3-Cl
 
 Subscribe for roles updates at [FB] (https://www.facebook.com/SoftAsap/)
 
-
+Join gitter discussion channel at [Gitter](https://gitter.im/softasap)
