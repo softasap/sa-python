@@ -5,6 +5,8 @@ sa-python
 
 installs and updates pip to the most recent version
 
+Note: alpine support is experimental for now.
+
 Example of usage (all parameters are optional)
 
 Simple
