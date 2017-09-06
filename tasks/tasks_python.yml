@@ -1,75 +1,186 @@
 ---
-  - name: Python | install python-pip
-    apt: name=python-pip update_cache=yes state=latest
-    become: yes
-    tags:
-      -python
+  #  sa-python v 1.0.1
+  - block:
 
-  - name: Python | Update pip
-    shell: pip install -U pip
-    become: yes
-    tags:
-      -python
+    - name: Python | install python-pip
+      apt: name=python-pip update_cache=yes state=latest
+      become: yes
+      tags:
+        -python
 
-  - name: Python | install python-dev
-    apt: name=python-dev update_cache=yes state=latest
-    become: yes
-    tags:
-      -python
+    - name: Python | Update pip
+      shell: pip install -U pip
+      become: yes
+      tags:
+        -python
 
-  # - name: Python | install swig
-  #   apt: name=swig update_cache=yes state=latest
-  #   become: yes
-  #   tags:
-  #     -python
+    - name: Python | install python-dev
+      apt: name=python-dev update_cache=yes state=latest
+      become: yes
+      tags:
+        -python
 
-  - name: Python | VirtualEnv
-    shell: pip install -U virtualenv
-    become: yes
-    tags:
-      -python
+    - name: Python | VirtualEnv
+      shell: pip install -U virtualenv
+      become: yes
+      tags:
+        -python
 
-  - name: Python | virtualenvwrapper
-    shell: pip install -U virtualenvwrapper
-    become: yes
-    tags:
-      -python
+    - name: Python | virtualenvwrapper
+      shell: pip install -U virtualenvwrapper
+      become: yes
+      tags:
+        -python
 
-  - name: Python | virtualenvwrapper console support
-    apt: pkg="virtualenvwrapper" state="latest"
-    become: yes
-    tags:
-      -python
+    - name: Python | virtualenvwrapper console support
+      apt: pkg="virtualenvwrapper" state="latest"
+      become: yes
+      tags:
+        -python
 
-  - name: Python | install ca-certificates
-    package: name="ca-certificates" state=present
-    when: ansible_os_family == 'Debian'
-    become: yes
-    tags:
-      -python
+    - name: Python | install ca-certificates
+      package: name="ca-certificates" state=present
+      when: ansible_os_family == 'Debian'
+      become: yes
+      tags:
+        -python
 
-  - name: Python | install the Python SNI support packages
-    package: name="{{ item }}" state=present
-    with_items:
-      - python-dev
-      - libssl-dev
-      - libffi-dev
-    when: ansible_os_family == 'Debian'
-      and ansible_python_version | version_compare('2.6.0', '>=')
-      and ansible_python_version | version_compare('2.7.9', '<')
-    become: yes
-    tags:
-      -python
+    - name: Python | install the Python SNI support packages
+      package: name="{{ item }}" state=present
+      with_items:
+        - python-dev
+        - libssl-dev
+        - libffi-dev
+      when: ansible_os_family == 'Debian'
+        and ansible_python_version | version_compare('2.6.0', '>=')
+        and ansible_python_version | version_compare('2.7.9', '<')
+      become: yes
+      tags:
+        -python
 
-  - name: Python | install the Python SNI python-pip dependencies.
-    pip: name="{{ item }}" state=present
-    with_items:
-      - pyopenssl
-      - ndg-httpsclient
-      - pyasn1
-    when: ansible_os_family == 'Debian'
-      and ansible_python_version | version_compare('2.6.0', '>=')
-      and ansible_python_version | version_compare('2.7.9', '<')
-    become: yes
-    tags:
-      -python
+    - name: Python | install the Python SNI python-pip dependencies.
+      pip: name="{{ item }}" state=present
+      with_items:
+        - pyopenssl
+        - ndg-httpsclient
+        - pyasn1
+      when: ansible_os_family == 'Debian'
+        and ansible_python_version | version_compare('2.6.0', '>=')
+        and ansible_python_version | version_compare('2.7.9', '<')
+      become: yes
+      tags:
+        -python
+
+    when: ansible_os_family == "Debian"
+
+--- / UBUNTU    
+
+  - block:
+
+    - name: EPEL | Check if EPEL repo is already configured.
+      shell: test -e etc/yum.repos.d/epel.repo
+      become: yes
+      register: repo_repo_exists
+      ignore_errors: true
+
+    - name: Install EPEL repo.
+      yum: name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_release_version | default(ansible_distribution_major_version) }}.noarch.rpm"  state=present
+      retries: 5
+      delay: 10
+      when: repo_repo_exists | failed
+      become: yes
+      register: result
+      until: '"failed" not in result'
+
+    - name: Import EPEL GPG key.
+      rpm_key: key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_release_version | default(ansible_distribution_major_version) }}" state="present"
+      when: repo_repo_exists | failed
+      become: yes  
+
+    - name: Python | install python-pip
+      yum: name=python-pip update_cache=yes state=latest
+      become: yes
+      tags:
+        -python
+
+    - name: Python | Update pip
+      shell: pip install -U pip
+      become: yes
+      tags:
+        -python
+
+    - name: Python | install python-dev
+      yum: name=python-devel update_cache=yes state=latest
+      become: yes
+      tags:
+        -python
+
+    # - name: Python | install swig
+    #   apt: name=swig update_cache=yes state=latest
+    #   become: yes
+    #   tags:
+    #     -python
+
+    - name: Python | VirtualEnv
+      shell: pip install -U virtualenv
+      become: yes
+      tags:
+        -python
+
+    - name: Python | virtualenvwrapper
+
+      shell: pip install -U virtualenvwrapper
+      become: yes
+      tags:
+        -python      
+
+
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Fedora' or ansible_distribution == 'Red Hat Enterprise Linux'        
+
+--- / CentOs Fedora Redhat        
+
+  - block:
+
+    - name: Python | Install dependencies
+      shell: |
+
+                    ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" && \
+                    ALPINE_GLIBC_PACKAGE_VERSION="2.25-r0" && \
+                    ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
+                    ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
+                    ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
+                    apk add --no-cache --virtual=.build-dependencies wget ca-certificates && \
+                    wget \
+                        "https://raw.githubusercontent.com/andyshinn/alpine-pkg-glibc/master/sgerrand.rsa.pub" \
+                        -O "/etc/apk/keys/sgerrand.rsa.pub" && \
+                    wget \
+                        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
+                        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
+                        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
+                    apk add --no-cache \
+                        "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
+                        "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
+                        "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
+                    \
+                    rm "/etc/apk/keys/sgerrand.rsa.pub" && \
+                    /usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 C.UTF-8 || true && \
+                    echo "export LANG=C.UTF-8" > /etc/profile.d/locale.sh && \
+                    \
+                    apk del glibc-i18n && \
+                    \
+                    rm "/root/.wget-hsts" && \
+                    apk del .build-dependencies && \
+                    rm \
+                        "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
+                        "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
+                        "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME"      
+
+      - name: Python | Install python itself
+        shell: |
+                  apk add --no-cache python python-dev ca-certificates && \
+                  python -m ensurepip && \
+                  rm -r /usr/lib/python*/ensurepip && \
+                  pip install --upgrade pip setuptools && \
+                  rm -r /root/.cache                          
+
+    when: ansible_os_family == "Alpine"  
