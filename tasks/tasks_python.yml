@@ -244,8 +244,21 @@
       shell: pip install --upgrade pip setuptools
       when: python_present | failed      
 
+    - name: Python | VirtualEnv
+      shell: pip install -U virtualenv
+      when: python_present | failed      
+      tags:
+        -python
+
+    - name: Python | virtualenvwrapper
+      shell: pip install -U virtualenvwrapper
+      when: python_present | failed      
+      tags:
+        -python      
+      
     - name: Python | Install python itself | Step 5
       shell: rm -r /root/.cache      
       when: python_present | failed      
+
 
     when: ansible_os_family == "Alpine"  
