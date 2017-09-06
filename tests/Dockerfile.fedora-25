@@ -1,9 +1,10 @@
 
-FROM centos:7
-RUN rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
+FROM fedora:25
 
 # Install Ansible
-RUN yum -y install ansible
+RUN dnf -y update
+RUN dnf install -y python2 python2-dnf libselinux-python
+RUN dnf -y install ansible
 RUN mkdir -p /etc/ansible
 
 # Install Ansible inventory file
