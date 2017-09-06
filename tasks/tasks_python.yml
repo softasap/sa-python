@@ -167,7 +167,7 @@
         validate_certs: no
    
     - name: Alpine | Install GLIBC | Step 4
-      shell: add --no-cache "/tmp/{{ALPINE_GLIBC_BASE_PACKAGE_FILENAME}}"
+      shell: apk add --no-cache "/tmp/{{ALPINE_GLIBC_BASE_PACKAGE_FILENAME}}"
 
     - name: Alpine | Install GLIBC | Step 5
       get_url:
@@ -176,7 +176,7 @@
         validate_certs: no
     
     - name: Alpine | Install GLIBC | Step 6
-      shell: add --no-cache "/tmp/{{ALPINE_GLIBC_BIN_PACKAGE_FILENAME}}"
+      shell: apk add --no-cache "/tmp/{{ALPINE_GLIBC_BIN_PACKAGE_FILENAME}}"
 
     - name: Alpine | Install GLIBC | Step 7
       get_url:
@@ -185,7 +185,7 @@
         validate_certs: no
 
     - name: Alpine | Install GLIBC | Step 8
-      shell: add --no-cache "/tmp/{{ALPINE_GLIBC_I18N_PACKAGE_FILENAME}}"
+      shell: apk add --no-cache "/tmp/{{ALPINE_GLIBC_I18N_PACKAGE_FILENAME}}"
 
     - name: Alpine | Install GLIBC | Step 9
       file: path="/etc/apk/keys/sgerrand.rsa.pub" state="absent"
