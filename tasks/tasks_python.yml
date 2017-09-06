@@ -175,12 +175,13 @@
                         "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
                         "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME"      
 
-      - name: Python | Install python itself
-        shell: |
-                  apk add --no-cache python python-dev ca-certificates && \
-                  python -m ensurepip && \
-                  rm -r /usr/lib/python*/ensurepip && \
-                  pip install --upgrade pip setuptools && \
-                  rm -r /root/.cache                          
+
+    - name: Python | Install python itself
+      shell: |
+                apk add --no-cache python python-dev ca-certificates && \
+                python -m ensurepip && \
+                rm -r /usr/lib/python*/ensurepip && \
+                pip install --upgrade pip setuptools && \
+                rm -r /root/.cache                          
 
     when: ansible_os_family == "Alpine"  
