@@ -73,7 +73,7 @@
 
     when: ansible_os_family == "Debian"
 
---- / UBUNTU    
+#  / UBUNTU    
 
   - block:
 
@@ -137,7 +137,7 @@
 
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'Fedora' or ansible_distribution == 'Red Hat Enterprise Linux'        
 
---- / CentOs Fedora Redhat        
+# / CentOs Fedora Redhat        
 
   - block:
 
