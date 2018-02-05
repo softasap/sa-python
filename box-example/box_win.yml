@@ -1,0 +1,29 @@
+---
+- hosts: www
+  gather_facts: False
+
+  vars:
+    - root_dir: ..
+
+    - ansible_connection: winrm
+    - ansible_ssh_port: 5986
+    - ansible_winrm_server_cert_validation: ignore
+    - ansible_winrm_transport: ssl
+
+
+  pre_tasks:
+    - debug: msg="Pre tasks section"
+
+    - name: gather facts
+      setup:
+
+  roles:
+     - {
+         role: "sa-python"
+       }
+
+
+  tasks:
+
+    - debug: msg="Tasks section"
+

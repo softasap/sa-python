@@ -1,0 +1,22 @@
+---
+
+  - name: Python | Install package
+    win_dsc:
+      resource_name: cChocoPackageInstaller
+      Name: "python2"
+      DependsOn: "[cChocoInstaller]installChoco"
+
+  - name: Python | Update pip
+    win_shell: pip install -U pip
+    tags:
+      -python
+
+  - name: Python | VirtualEnv
+    win_shell: pip install -U virtualenv
+    tags:
+      -python
+
+  - name: Python | virtualenvwrapper
+    win_shell: pip install -U virtualenvwrapper
+    tags:
+      -python
