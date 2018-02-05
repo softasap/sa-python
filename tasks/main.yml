@@ -1,3 +1,7 @@
 ---
 # tasks file for sa-python
   - include: tasks_python.yml
+    when: ansible_os_family != "Windows"
+
+  - include: tasks_python_win.yml
+    when: ansible_os_family == "Windows"  

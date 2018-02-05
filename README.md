@@ -2,6 +2,7 @@ sa-python
 =========
 
 [![Build Status](https://travis-ci.org/softasap/sa-python.svg?branch=master)](https://travis-ci.org/softasap/sa-python)
+[![Includes support for Windows with PS5](https://img.shields.io/badge/Windows-Friendly-blue.svg)](https://img.shields.io/badge/Windows-Friendly-blue.svg)
 
 installs and updates pip to the most recent version
 
@@ -26,6 +27,39 @@ Advanced:
         role: "sa-python"
       }
 ```
+
+
+# Windows support
+
+For windows support we expect, that box is prepared for provisioning with ansible (best used with role  https://github.com/softasap/sa-box-bootstrap-win ,
+but if you configured the same setup manually will work too )
+
+Example of the typical windows play:
+
+```YAML
+
+vars:
+  - root_dir: ..
+
+  - ansible_connection: winrm
+  - ansible_ssh_port: 5986
+  - ansible_winrm_server_cert_validation: ignore
+  - ansible_winrm_transport: ssl
+
+
+pre_tasks:
+  - debug: msg="Pre tasks section"
+
+  - name: gather facts
+    setup:
+
+roles:
+   - {
+       role: "sa-python"
+     }
+
+```
+
 
 Copyright and license
 ---------------------
