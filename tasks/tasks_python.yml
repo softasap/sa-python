@@ -87,14 +87,14 @@
       yum: name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_release_version | default(ansible_distribution_major_version) }}.noarch.rpm"  state=present
       retries: 5
       delay: 10
-      when: repo_repo_exists | failed
+      when: repo_repo_exists is failed
       become: yes
       register: result
-      until: '"failed" not in result'
+      until: '"failed" not in result or "is already installed" in result'
 
     - name: Import EPEL GPG key.
       rpm_key: key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_release_version | default(ansible_distribution_major_version) }}" state="present"
-      when: repo_repo_exists | failed
+      when: repo_repo_exists is failed
       become: yes  
 
     - name: Python | install python-pip
@@ -154,71 +154,71 @@
 
     - name: Alpine | Install GLIBC | Step 1
       shell: apk add --no-cache --virtual=.build-dependencies wget ca-certificates  
-      when: python_present | failed
+      when: python_present is failed
 
     - name: Alpine | Install GLIBC | Step 2
       get_url:
         url: https://raw.githubusercontent.com/andyshinn/alpine-pkg-glibc/master/sgerrand.rsa.pub
         dest: /etc/apk/keys/sgerrand.rsa.pub
         validate_certs: no
-      when: python_present | failed        
+      when: python_present is failed        
       
     - name: Alpine | Install GLIBC | Step 3
       get_url:
         url: "{{ALPINE_GLIBC_BASE_URL}}/{{ALPINE_GLIBC_PACKAGE_VERSION}}/{{ALPINE_GLIBC_BASE_PACKAGE_FILENAME}}"
         dest: "/tmp/{{ALPINE_GLIBC_BASE_PACKAGE_FILENAME}}"
         validate_certs: no
-      when: python_present | failed        
+      when: python_present is failed        
    
     - name: Alpine | Install GLIBC | Step 4
       shell: apk add --no-cache "/tmp/{{ALPINE_GLIBC_BASE_PACKAGE_FILENAME}}"
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 5
       get_url:
         url: "{{ALPINE_GLIBC_BASE_URL}}/{{ALPINE_GLIBC_PACKAGE_VERSION}}/{{ALPINE_GLIBC_BIN_PACKAGE_FILENAME}}"
         dest: "/tmp/{{ALPINE_GLIBC_BIN_PACKAGE_FILENAME}}"
         validate_certs: no
-      when: python_present | failed        
+      when: python_present is failed        
     
     - name: Alpine | Install GLIBC | Step 6
       shell: apk add --no-cache "/tmp/{{ALPINE_GLIBC_BIN_PACKAGE_FILENAME}}"
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 7
       get_url:
         url: "{{ALPINE_GLIBC_BASE_URL}}/{{ALPINE_GLIBC_PACKAGE_VERSION}}/{{ALPINE_GLIBC_I18N_PACKAGE_FILENAME}}"
         dest: "/tmp/{{ALPINE_GLIBC_I18N_PACKAGE_FILENAME}}"
         validate_certs: no
-      when: python_present | failed        
+      when: python_present is failed        
 
     - name: Alpine | Install GLIBC | Step 8
       shell: apk add --no-cache "/tmp/{{ALPINE_GLIBC_I18N_PACKAGE_FILENAME}}"
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 9
       file: path="/etc/apk/keys/sgerrand.rsa.pub" state="absent"
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 10
       shell: "/usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 C.UTF-8 || true"
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 11      
       shell: echo "export LANG=C.UTF-8" > /etc/profile.d/locale.sh
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 12      
       shell: apk del glibc-i18n
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 13
       file: path="/root/.wget-hsts" state="absent"
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 14
       shell: apk del .build-dependencies
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Alpine | Install GLIBC | Step 15
       file: path="{{item}}" state="absent"
@@ -226,39 +226,39 @@
           - "{{ALPINE_GLIBC_BASE_PACKAGE_FILENAME}}"
           - "{{ALPINE_GLIBC_BIN_PACKAGE_FILENAME}}"
           - "{{ALPINE_GLIBC_I18N_PACKAGE_FILENAME}}"
-      when: python_present | failed          
+      when: python_present is failed          
 
     - name: Python | Install python itself | Step 1
       shell: apk add --no-cache python python-dev ca-certificates 
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Python | Install python itself | Step 2      
       shell: python -m ensurepip
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Python | Install python itself | Step 3            
       shell: rm -r /usr/lib/python*/ensurepip
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Python | Install python itself | Step 4
       shell: pip install --upgrade pip setuptools
-      when: python_present | failed      
+      when: python_present is failed      
 
     - name: Python | VirtualEnv
       shell: pip install -U virtualenv
-      when: python_present | failed      
+      when: python_present is failed      
       tags:
         -python
 
     - name: Python | virtualenvwrapper
       shell: pip install -U virtualenvwrapper
-      when: python_present | failed      
+      when: python_present is failed      
       tags:
         -python      
       
     - name: Python | Install python itself | Step 5
       shell: rm -r /root/.cache      
-      when: python_present | failed      
+      when: python_present is failed      
 
 
     when: ansible_os_family == "Alpine"  
