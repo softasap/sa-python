@@ -25,9 +25,9 @@
       become: yes
       tags:
         -python
-
+	
     - name: Python | virtualenvwrapper
-      shell: pip install -U virtualenvwrapper
+      shell: pip install -U --ignore-installed six virtualenvwrapper
       become: yes
       tags:
         -python
