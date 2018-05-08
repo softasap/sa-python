@@ -24,7 +24,8 @@ Advanced:
 ```YAML
   roles:
     - {
-        role: "sa-python"
+        role: "sa-python",
+        option_install_epel: true
       }
 ```
 
@@ -75,5 +76,3 @@ Join gitter discussion channel at [Gitter](https://gitter.im/softasap)
 Discover other roles at  http://www.softasap.com/roles/registry_generated.html
 
 visit our blog at http://www.softasap.com/blog/archive.html
-
-
