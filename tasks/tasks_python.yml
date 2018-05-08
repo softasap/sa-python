@@ -90,7 +90,8 @@
       when: repo_repo_exists is failed
       become: yes
       register: result
-      until: '"failed" not in result or "is already installed" in result'
+      changed_when: '"is already installed" in result'
+      until: '"failed" not in result'
 
     - name: Import EPEL GPG key.
       rpm_key: key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_release_version | default(ansible_distribution_major_version) }}" state="present"
