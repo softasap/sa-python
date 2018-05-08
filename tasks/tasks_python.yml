@@ -1,5 +1,5 @@
 ---
-  #  sa-python v 1.0.1
+  #  sa-python v 1.3.0
   - block:
 
     - name: Python | install python-pip
@@ -100,7 +100,7 @@
         when: repo_repo_exists is failed
         become: yes
 
-      when: option_install_epel  
+      when: option_install_epel or  option_install_epel is not defined
 
     - name: Python | install python-pip
       yum: name=python-pip update_cache=yes state=latest
