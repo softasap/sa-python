@@ -163,7 +163,7 @@
 
     - name: Alpine | Install GLIBC | Step 2
       get_url:
-        url: https://raw.githubusercontent.com/andyshinn/alpine-pkg-glibc/master/sgerrand.rsa.pub
+        url: https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
         dest: /etc/apk/keys/sgerrand.rsa.pub
         validate_certs: no
       when: python_present is failed
