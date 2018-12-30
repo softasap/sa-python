@@ -4,4 +4,4 @@
     when: ansible_os_family != "Windows"
 
   - include: tasks_python_win.yml
-    when: ansible_os_family == "Windows"  
+    when: ansible_os_family == "Windows"

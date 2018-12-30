@@ -31,7 +31,7 @@ galaxy_info:
       - 6
     - name: Windows
       versions:
-      - all 
+      - all
   galaxy_tags:
     - python
     - pip

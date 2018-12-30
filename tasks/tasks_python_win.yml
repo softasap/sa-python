@@ -1,5 +1,4 @@
 ---
-
   - name: Python | Install package
     win_dsc:
       resource_name: cChocoPackageInstaller
