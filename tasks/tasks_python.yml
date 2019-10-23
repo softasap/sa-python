@@ -1,4 +1,5 @@
 ---
+  #  sa-python v 1.7.0
   - block:
 
     - name: Python | install python-pip
@@ -67,24 +68,25 @@
         - libssl-dev
         - libffi-dev
       when: ansible_os_family == 'Debian'
-        and ansible_python_version | version_compare('2.6.0', '>=')
-        and ansible_python_version | version_compare('2.7.9', '<')
+        and ansible_python_version is version_compare('2.6.0', '>=')
+        and ansible_python_version is version_compare('2.7.9', '<')
       become: yes
       tags:
         -python
 
     - name: Python | install the Python SNI python-pip dependencies.
-      pip: name="{{ item }}" state=present
+      pip:
+       name:
+          - pyopenssl
+          - ndg-httpsclient
+          - pyasn1
+       state: present
       retries: 3
       register: result
       until: result is not failed
-      with_items:
-        - pyopenssl
-        - ndg-httpsclient
-        - pyasn1
       when: ansible_os_family == 'Debian'
-        and ansible_python_version | version_compare('2.6.0', '>=')
-        and ansible_python_version | version_compare('2.7.9', '<')
+        and ansible_python_version is version_compare('2.6.0', '>=')
+        and ansible_python_version is version_compare('2.7.9', '<')
       become: yes
       tags:
         -python
@@ -104,7 +106,9 @@
         ignore_errors: true
 
       - name: Install EPEL repo.
-        yum: name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_release_version | default(ansible_distribution_major_version) }}.noarch.rpm"  state=present
+        yum:
+          name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_release_version | default(ansible_distribution_major_version) }}.noarch.rpm"
+          state: present
         retries: 5
         delay: 10
         when: epel_repo_exists is failed
@@ -112,6 +116,8 @@
         register: result
         changed_when: '"installed" in result'
         until: '"failed" not in result'
+        tags:
+          - skip_ansible_lint
 
       - name: Import EPEL GPG key.
         rpm_key: key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_release_version | default(ansible_distribution_major_version) }}" state="present"
