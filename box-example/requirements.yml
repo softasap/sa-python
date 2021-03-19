@@ -1,2 +1,2 @@
-- src: softasap.sa-python
-  name: sa-python
+- src: softasap.sa_python
+  name: sa_python

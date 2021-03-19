@@ -1,3 +1,3 @@
-[submodule "roles/sa-python"]
-        path = roles/sa-python
+[submodule "roles/sa_python"]
+        path = roles/sa_python
         url = https://github.com/softasap/sa-python.git

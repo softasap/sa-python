@@ -1,5 +1,5 @@
 ---
-  #  sa-python v 1.7.0
+  #  sa_python v 1.8.0
   - block:
 
     - name: Python | install python-pip

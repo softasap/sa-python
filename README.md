@@ -1,4 +1,4 @@
-sa-python
+sa_python
 =========
 
 [![Build Status](https://travis-ci.org/softasap/sa-python.svg?branch=master)](https://travis-ci.org/softasap/sa-python)
@@ -15,7 +15,7 @@ Simple
 ```YAML
   roles:
     - {
-        role: "sa-python"
+        role: "sa_python"
       }
 ```
 
@@ -24,7 +24,7 @@ Advanced:
 ```YAML
   roles:
     - {
-        role: "sa-python",
+        role: "sa_python",
         option_install_epel: true
       }
 ```
@@ -56,7 +56,7 @@ pre_tasks:
 
 roles:
    - {
-       role: "sa-python"
+       role: "sa_python"
      }
 
 ```
