@@ -25,7 +25,5 @@
          role: "sa_python"
        }
 
-
   tasks:
-
     - debug: msg="Tasks section"
